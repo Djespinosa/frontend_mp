@@ -1,0 +1,23 @@
+{
+  "name": "michael-page-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend - Prueba tecnica Michael Page (host + micro-frontends via Module Federation)",
+  "workspaces": [
+    "shared",
+    "host",
+    "requester-app",
+    "approval-app"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:coverage": "npm run test:coverage --workspaces --if-present",
+    "dev": "concurrently -n host,requester,approval -c blue,green,yellow \"npm:dev --workspace=host\" \"npm:dev --workspace=requester-app\" \"npm:dev --workspace=approval-app\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
