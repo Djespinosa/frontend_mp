@@ -4,6 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Michael Page — Flujo de Aprobación de Compras</title>
+    <style>
+:root{--color-primary:#4f46e5;--color-primary-dark:#4338ca;--color-bg:#f1f5f9;--color-surface:#fff;--color-text:#1e293b;--color-muted:#64748b;--color-border:#e2e8f0;--color-success:#15803d;--color-success-bg:#dcfce7;--color-warning:#b45309;--color-warning-bg:#fef3c7;--color-danger:#b91c1c;--color-danger-bg:#fee2e2;--radius:10px;--shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.06)}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background-color:var(--color-bg);color:var(--color-text);line-height:1.5}
+#root{min-height:100vh;display:flex;flex-direction:column}
+#root>div{display:flex;flex-direction:column;min-height:100vh}
+header{background-color:var(--color-primary);color:#fff;padding:1.25rem 2rem;box-shadow:var(--shadow)}
+header h1{margin:0;font-size:1.25rem;font-weight:600}
+main{flex:1;width:100%;max-width:960px;margin:0 auto;padding:2rem 1.5rem}
+footer{padding:1.5rem 2rem;text-align:center;color:var(--color-muted);font-size:.85rem;border-top:1px solid var(--color-border)}
+footer a{color:var(--color-muted)}
+nav{display:flex;gap:1rem;margin-top:.75rem;flex-wrap:wrap}
+section{background-color:var(--color-surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.75rem 2rem;margin-bottom:1.5rem}
+h1,h2,h3{color:var(--color-text)}
+h2{margin-top:0;font-size:1.4rem}
+h3{font-size:1.1rem;color:var(--color-muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:.75rem}
+a{color:var(--color-primary);text-decoration:none;font-weight:500}
+a:hover{text-decoration:underline}
+form{display:flex;flex-direction:column;gap:.35rem;margin:1rem 0}
+label{font-size:.85rem;font-weight:600;color:var(--color-muted);margin-top:.5rem}
+input,textarea,select{padding:.6rem .75rem;border:1px solid var(--color-border);border-radius:8px;font-size:.95rem;font-family:inherit;background-color:#fff;color:var(--color-text)}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--color-primary);outline-offset:1px;border-color:var(--color-primary)}
+textarea{min-height:90px;resize:vertical}
+fieldset{border:1px solid var(--color-border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1rem 0}
+legend{font-weight:600;color:var(--color-primary);padding:0 .4rem}
+button{align-self:flex-start;background-color:var(--color-primary);color:#fff;border:none;padding:.6rem 1.25rem;border-radius:8px;font-size:.95rem;font-weight:600;cursor:pointer;margin:.35rem .5rem .35rem 0;transition:background-color .15s ease}
+button:hover:not(:disabled){background-color:var(--color-primary-dark)}
+button:disabled{background-color:#c7c9d9;cursor:not-allowed}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem}
+th,td{text-align:left;padding:.65rem .75rem;border-bottom:1px solid var(--color-border)}
+th{background-color:#f8fafc;color:var(--color-muted);font-weight:600;text-transform:uppercase;font-size:.75rem;letter-spacing:.03em}
+tbody tr:hover{background-color:#f8fafc}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:.4rem 1rem;margin:1rem 0}
+dt{font-weight:600;color:var(--color-muted)}
+dd{margin:0}
+[role="alert"]{background-color:var(--color-danger-bg);color:var(--color-danger);border:1px solid #fecaca;border-radius:8px;padding:.75rem 1rem;margin:.75rem 0;font-size:.9rem}
+[role="status"]{color:var(--color-muted);font-style:italic;padding:.5rem 0}
+[data-status]{display:inline-block;padding:.25rem .75rem;border-radius:999px;font-size:.8rem;font-weight:600;background-color:#f1f5f9;color:var(--color-muted)}
+[data-status="PENDIENTE"]{background-color:var(--color-warning-bg);color:var(--color-warning)}
+[data-status="FIRMADO"],[data-status="COMPLETADA"]{background-color:var(--color-success-bg);color:var(--color-success)}
+[data-status="RECHAZADO"],[data-status="RECHAZADA"]{background-color:var(--color-danger-bg);color:var(--color-danger)}
+    </style>
   </head>
   <body>
     <div id="root"></div>
