@@ -21,7 +21,10 @@ module.exports = (_env, argv) => {
       path: path.resolve(__dirname, 'dist'),
       filename: '[name].[contenthash].js',
       clean: true,
-      publicPath: 'auto',
+      // '/' y no 'auto': con publicPath relativo, en /dev/mock-mail o /approve
+      // el navegador pide /dev/mock-mail/main.js (404). Los remotes sí deben
+      // seguir en 'auto' para cargar sus chunks desde su propio dominio.
+      publicPath: '/',
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.js'],
