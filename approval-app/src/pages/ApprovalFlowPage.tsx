@@ -9,11 +9,14 @@ import {
   LoadingIndicator,
   useAsync,
   getErrorMessage,
+  getRequestDetail,
 } from '@mp/shared';
 import { ApprovalDetailScreen } from '../components/ApprovalDetailScreen';
 import { OtpForm } from '../components/OtpForm';
 import { approveRequest, rejectRequest, validateApprovalLink, validateOtp } from '../services/approvalService';
 import { clearApprovalSession, loadApprovalSession, saveApprovalSession } from '../utils/approvalSessionStorage';
+
+const POLL_INTERVAL_MS = 4000;
 
 function isSessionExpiredError(error: unknown): boolean {
   return error instanceof ApiError && error.code === 'INVALID_SESSION';
@@ -63,6 +66,26 @@ export function ApprovalFlowPage() {
       }
     }
   }, [approveErrorRaw, rejectErrorRaw, solicitudId, approverToken, runValidateLink]);
+
+  // Los otros aprobadores firman/rechazan desde otra pestaña, así que esta
+  // pantalla refresca sola el estado de la tabla mientras no se haya actuado
+  // todavía (una vez hay actionResult, la pantalla ya muestra el resultado final).
+  const hasActiveSession = Boolean(sessionData) && !actionResult;
+
+  useEffect(() => {
+    if (!hasActiveSession || !solicitudId) return;
+
+    const intervalId = setInterval(async () => {
+      try {
+        const detail = await getRequestDetail(solicitudId);
+        setSessionData((prev) => (prev ? { ...prev, approvals: detail.approvals } : prev));
+      } catch {
+        // Refresco best-effort: un fallo puntual no debe interrumpir la pantalla de aprobación.
+      }
+    }, POLL_INTERVAL_MS);
+
+    return () => clearInterval(intervalId);
+  }, [hasActiveSession, solicitudId]);
 
   async function handleOtpSubmit(otp: string) {
     if (!solicitudId || !approverToken) return;

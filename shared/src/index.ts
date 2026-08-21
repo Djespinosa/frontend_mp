@@ -1,5 +1,6 @@
 export * from './types';
 export { httpClient } from './services/httpClient';
+export { getRequestDetail } from './services/requestReadService';
 export { API_BASE_URL } from './utils/env';
 export { getErrorMessage } from './utils/errorMessages';
 export { useAsync } from './hooks/useAsync';

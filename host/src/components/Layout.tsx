@@ -10,6 +10,9 @@ export function Layout({ children }: LayoutProps) {
     <div>
       <header>
         <h1>Michael Page — Aprobación de Compras</h1>
+        <nav>
+          <Link to="/">Inicio</Link>
+        </nav>
       </header>
       <main>{children}</main>
       <footer>

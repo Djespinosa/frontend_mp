@@ -1,11 +1,4 @@
-import {
-  httpClient,
-  CreateRequestPayload,
-  CreateRequestResponse,
-  ListRequestsParams,
-  ListRequestsResponse,
-  RequestDetail,
-} from '@mp/shared';
+import { httpClient, CreateRequestPayload, CreateRequestResponse, ListRequestsParams, ListRequestsResponse } from '@mp/shared';
 
 export async function createRequest(payload: CreateRequestPayload): Promise<CreateRequestResponse> {
   const { data } = await httpClient.post<CreateRequestResponse>('/solicitudes', payload);
@@ -17,7 +10,6 @@ export async function listRequests(params: ListRequestsParams = {}): Promise<Lis
   return data;
 }
 
-export async function getRequestDetail(requestId: string): Promise<RequestDetail> {
-  const { data } = await httpClient.get<RequestDetail>(`/solicitudes/${encodeURIComponent(requestId)}`);
-  return data;
-}
+// getRequestDetail vive en @mp/shared: también lo usa approval-app para
+// refrescar el estado de los otros aprobadores sin duplicar la llamada HTTP.
+export { getRequestDetail } from '@mp/shared';
