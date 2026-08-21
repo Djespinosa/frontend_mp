@@ -12,17 +12,29 @@ async function copyToClipboard(value: string): Promise<void> {
   }
 }
 
+const POLL_INTERVAL_MS = 4000;
+
 export function MockMailPage() {
   const [requestIdFilter, setRequestIdFilter] = useState('');
+  const [appliedFilter, setAppliedFilter] = useState<string | undefined>(undefined);
   const { status, data, error, run } = useAsync(listMail);
 
   useEffect(() => {
-    run();
-  }, [run]);
+    run(appliedFilter);
+  }, [appliedFilter, run]);
+
+  // El OTP se emite bajo demanda al abrir el enlace (no en la creación de la
+  // solicitud), así que el correo con el código todavía no existe cuando se
+  // carga esta bandeja: hace falta refrescar para verlo. Se refresca sola
+  // para no obligar a pulsar "Filtrar" a cada rato durante la demo.
+  useEffect(() => {
+    const intervalId = setInterval(() => run(appliedFilter), POLL_INTERVAL_MS);
+    return () => clearInterval(intervalId);
+  }, [appliedFilter, run]);
 
   function handleFilterSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    run(requestIdFilter.trim() || undefined);
+    setAppliedFilter(requestIdFilter.trim() || undefined);
   }
 
   return (

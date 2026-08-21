@@ -4,6 +4,9 @@ import { ErrorMessage, LoadingIndicator, StatusBadge, useAsync, getErrorMessage 
 import { getRequestDetail } from '../services/requestService';
 import { getEvidenceUrl } from '../services/evidenceService';
 
+const POLL_INTERVAL_MS = 4000;
+const TERMINAL_STATUSES = ['COMPLETADA', 'RECHAZADA'];
+
 export function RequestDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { status, data, error, run } = useAsync(getRequestDetail);
@@ -15,6 +18,17 @@ export function RequestDetailPage() {
       run(id);
     }
   }, [id, run]);
+
+  // Los aprobadores firman/rechazan desde otra pestaña, así que esta vista se
+  // refresca sola mientras la solicitud siga PENDIENTE, en vez de exigir
+  // pulsar "Actualizar" para ver cada aprobación.
+  useEffect(() => {
+    if (!id || (status === 'success' && TERMINAL_STATUSES.includes(data?.status ?? ''))) {
+      return;
+    }
+    const intervalId = setInterval(() => run(id), POLL_INTERVAL_MS);
+    return () => clearInterval(intervalId);
+  }, [id, status, data?.status, run]);
 
   async function handleDownload() {
     if (!id) return;
